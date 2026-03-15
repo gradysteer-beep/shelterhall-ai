@@ -11,7 +11,7 @@ export default async function handler(req, res) {
       {
         method: 'POST',
         headers: {
-          'Authorization': `${process.env.DMN_APP_ID}:${process.env.DMN_API_KEY}`,
+          'Authorization': process.env.DMN_API_KEY,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
