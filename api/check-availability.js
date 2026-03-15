@@ -6,25 +6,30 @@ export default async function handler(req, res) {
   try {
     const { venue_id, type, num_people, date, time, duration } = req.body
 
-    console.log('Availability request received:', req.body)
-
-    return res.status(200).json({
-      success: true,
-      available: true,
-      message: 'Availability endpoint working',
-      received: {
-        venue_id,
-        type,
-        num_people,
-        date,
-        time,
-        duration
+    const response = await fetch(
+      `https://api.designmynight.com/v4/venues/${venue_id}/booking-availability`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `${process.env.DMN_APP_ID}:${process.env.DMN_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          type,
+          num_people,
+          date,
+          time,
+          duration
+        })
       }
-    })
+    )
+
+    const data = await response.json()
+    return res.status(response.status).json(data)
   } catch (error) {
     return res.status(500).json({
-      error: 'Availability check failed',
-      details: error.message
+      success: false,
+      error: error.message
     })
   }
 }
